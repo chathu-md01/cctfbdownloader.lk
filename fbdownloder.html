@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="si">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHATHU-MD FB DOWNLOADER</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        body {
+            background: radial-gradient(circle at top left, #1e1b4b, #0f172a);
+            min-height: 100vh;
+            color: white;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .btn-gradient {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-gradient:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4);
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center p-4">
+
+    <div class="text-center mb-8 animate__animated animate__fadeInDown">
+        <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mb-2">
+            <span class="text-blue-500">CHATHU-MD</span> FB DOWNLOADER
+        </h1>
+        <p class="text-gray-400">High Quality Facebook Videos & Reels Downloader</p>
+    </div>
+
+    <div class="w-full max-w-2xl glass-card rounded-3xl p-6 md:p-10 shadow-2xl animate__animated animate__zoomIn">
+        <div class="flex flex-col gap-6">
+            <div class="relative">
+                <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+                    <i data-lucide="link" class="text-gray-400 w-5 h-5"></i>
+                </div>
+                <input type="text" id="videoUrl" 
+                    placeholder="මෙතනට Facebook URL එක Paste කරන්න..." 
+                    class="w-full bg-slate-900 border border-gray-700 rounded-2xl py-4 pl-12 pr-4 focus:ring-2 focus:ring-blue-500 focus:outline-none transition-all text-white">
+            </div>
+
+            <button onclick="downloadVideo()" id="downloadBtn" class="btn-gradient w-full py-4 rounded-2xl font-bold text-lg flex items-center justify-center gap-2">
+                <i data-lucide="download"></i> Download කරන්න
+            </button>
+
+            <div id="loading" class="hidden flex flex-col items-center py-4">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-500 mb-2"></div>
+                <p class="text-sm text-blue-400">මදක් රැඳී සිටින්න...</p>
+            </div>
+
+            <div id="result" class="hidden animate__animated animate__fadeInUp bg-slate-800/50 p-6 rounded-2xl border border-blue-500/30">
+                <div class="flex flex-col md:flex-row gap-4 items-center">
+                    <img id="videoThumb" class="w-32 h-20 object-cover rounded-lg shadow-lg" src="" alt="Thumbnail">
+                    <div class="flex-1 text-center md:text-left">
+                        <h3 id="videoTitle" class="font-semibold text-gray-200 truncate w-48">Video Title</h3>
+                        <div class="flex gap-2 mt-3 justify-center md:justify-start">
+                            <a id="hdLink" href="#" target="_blank" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg text-sm font-bold flex items-center gap-1">
+                                <i data-lucide="video" class="w-4 h-4"></i> HD Quality
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="mt-12 text-gray-500 text-sm animate__animated animate__fadeIn">
+        Designed & Developed by <span class="text-blue-500 font-bold">CHATHU-MD</span>
+    </footer>
+
+    <script>
+        // Initialize Icons
+        lucide.createIcons();
+
+        async function downloadVideo() {
+            const url = document.getElementById('videoUrl').value;
+            const btn = document.getElementById('downloadBtn');
+            const loading = document.getElementById('loading');
+            const result = document.getElementById('result');
+
+            if (!url) {
+                alert("කරුණාකර URL එකක් ඇතුළත් කරන්න!");
+                return;
+            }
+
+            // UI Reset
+            btn.disabled = true;
+            loading.classList.remove('hidden');
+            result.classList.add('hidden');
+
+            try {
+                // සටහන: මෙතනට ඔබගේ සැබෑ API endpoint එක සහ Key එක ලබාදිය යුතුය.
+                // උදාහරණයක් ලෙස RapidAPI හි FB Downloader API එකක් භාවිතා කළ හැක.
+                const response = await fetch(`https://your-api-link.com/download?url=${encodeURIComponent(url)}`, {
+                    headers: { 'X-RapidAPI-Key': 'b0efa01b43msh8f29f644a59aba3p16da58jsn45dc5ce0b7d9' }
+                });
+                
+                const data = await response.json();
+
+                if (data.status) {
+                    document.getElementById('videoThumb').src = data.thumbnail;
+                    document.getElementById('videoTitle').innerText = data.title || "Facebook Video";
+                    document.getElementById('hdLink').href = data.hd_link;
+                    
+                    result.classList.remove('hidden');
+                } else {
+                    alert("Video එක සොයාගත නොහැකි විය. කරුණාකර නැවත උත්සාහ කරන්න.");
+                }
+            } catch (error) {
+                console.error(error);
+                alert("Error: API එක සම්බන්ධ කර ගැනීමේ දෝෂයකි.");
+            } finally {
+                btn.disabled = false;
+                loading.classList.add('hidden');
+            }
+        }
+    </script>
+</body>
+</html>
