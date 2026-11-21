@@ -9,7 +9,672 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <style>
+        /* ============================================
+           BASE STYLES
+        ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #3b82f6;
+            --primary-dark: #1d4ed8;
+            --facebook: #1877f2;
+            --whatsapp: #25d366;
+            --bg-dark: #050814;
+            --bg-mid: #0a0f24;
+            --glass-bg: rgba(255, 255, 255, 0.06);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --text-main: #ffffff;
+            --text-muted: rgba(255, 255, 255, 0.7);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: radial-gradient(ellipse at top, #0d1530 0%, var(--bg-dark) 60%);
+            color: var(--text-main);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+            padding: 20px 0 40px;
+        }
+
+        /* ============================================
+           ANIMATED BACKGROUND
+        ============================================ */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(100px);
+            opacity: 0.35;
+            z-index: 0;
+            pointer-events: none;
+            animation: float 18s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: #1877f2;
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 350px;
+            height: 350px;
+            background: #8b5cf6;
+            bottom: 10%;
+            right: -100px;
+            animation-delay: -6s;
+        }
+
+        .orb-3 {
+            width: 300px;
+            height: 300px;
+            background: #06b6d4;
+            top: 50%;
+            left: 40%;
+            animation-delay: -12s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(50px, -40px) scale(1.1); }
+            66% { transform: translate(-40px, 40px) scale(0.95); }
+        }
+
+        #particleCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+        /* ============================================
+           CONTAINER & GLASS CARDS
+        ============================================ */
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+        }
+
+        /* ============================================
+           NAVBAR
+        ============================================ */
+        .navbar {
+            padding: 18px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+
+        .logo i {
+            color: var(--facebook);
+            font-size: 1.5rem;
+        }
+
+        /* ============================================
+           HERO SECTION
+        ============================================ */
+        .hero-card {
+            padding: 60px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--primary), transparent);
+        }
+
+        .hero-icon {
+            width: 90px;
+            height: 90px;
+            margin: 0 auto 25px;
+            background: linear-gradient(135deg, #1877f2, #3b82f6);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 40px rgba(24, 119, 242, 0.6);
+            animation: pulse 3s ease-in-out infinite;
+        }
+
+        .hero-icon i {
+            font-size: 2.8rem;
+            color: #fff;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 40px rgba(24, 119, 242, 0.6); }
+            50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(24, 119, 242, 0.9); }
+        }
+
+        .hero-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: clamp(1.6rem, 4vw, 2.6rem);
+            letter-spacing: 1px;
+            margin-bottom: 15px;
+            background: linear-gradient(135deg, #fff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            margin-bottom: 35px;
+            font-weight: 300;
+        }
+
+        /* ============================================
+           INPUT & BUTTON
+        ============================================ */
+        .input-group {
+            display: flex;
+            gap: 12px;
+            max-width: 720px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        .input-3d {
+            flex: 1;
+            min-width: 240px;
+            padding: 16px 22px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 1rem;
+            outline: none;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        .input-3d::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .input-3d:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.25), inset 0 2px 6px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-3d {
+            padding: 16px 32px;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: none;
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.95rem;
+            letter-spacing: 0.5px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            text-decoration: none;
+            white-space: nowrap;
+        }
+
+        .btn-3d:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(59, 130, 246, 0.6), inset 0 -2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .btn-3d:active:not(:disabled) {
+            transform: translateY(0);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+        }
+
+        .btn-3d:disabled {
+            opacity: 0.65;
+            cursor: not-allowed;
+        }
+
+        /* ============================================
+           RESULT SECTION
+        ============================================ */
+        .result-section {
+            margin-top: 30px;
+            animation: fadeInUp 0.5s ease;
+        }
+
+        .result-card {
+            padding: 30px;
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            align-items: start;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .video-preview {
+            position: relative;
+            border-radius: 14px;
+            overflow: hidden;
+            aspect-ratio: 16/9;
+            background: #000;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        .video-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .play-overlay {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0, 0, 0, 0.35);
+            pointer-events: none;
+        }
+
+        .play-overlay i {
+            font-size: 2.4rem;
+            color: #fff;
+            filter: drop-shadow(0 0 12px rgba(0, 0, 0, 0.6));
+        }
+
+        .video-info h3 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.15rem;
+            margin-bottom: 18px;
+            line-height: 1.4;
+            color: #fff;
+            word-break: break-word;
+        }
+
+        .quality-label {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 12px;
+            font-weight: 400;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .qualities-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            gap: 10px;
+        }
+
+        .quality-btn {
+            padding: 12px 18px;
+            background: rgba(59, 130, 246, 0.15);
+            border: 1px solid rgba(59, 130, 246, 0.4);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            text-align: left;
+        }
+
+        .quality-btn:hover {
+            background: rgba(59, 130, 246, 0.35);
+            border-color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+        }
+
+        .quality-btn i {
+            color: #60a5fa;
+        }
+
+        .no-quality {
+            color: var(--text-muted);
+            font-style: italic;
+            padding: 10px 0;
+        }
+
+        /* ============================================
+           HOW TO USE
+        ============================================ */
+        .how-to-use {
+            margin-top: 60px;
+        }
+
+        .section-title {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: clamp(1.2rem, 3vw, 1.6rem);
+            text-align: center;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
+            background: linear-gradient(135deg, #fff, #93c5fd);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .steps-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 16px;
+        }
+
+        .step-card {
+            padding: 26px 20px;
+            text-align: center;
+            position: relative;
+            transition: all 0.3s ease;
+        }
+
+        .step-card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(59, 130, 246, 0.5);
+        }
+
+        .step-number {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            font-family: 'Space Grotesk', sans-serif;
+            font-weight: 700;
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.25);
+            letter-spacing: 1px;
+        }
+
+        .step-icon {
+            font-size: 1.8rem;
+            color: #60a5fa;
+            margin-bottom: 12px;
+            display: block;
+        }
+
+        .step-card p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .step-card p strong {
+            color: #93c5fd;
+        }
+
+        /* ============================================
+           WHATSAPP SECTION
+        ============================================ */
+        .whatsapp-section {
+            margin-top: 60px;
+        }
+
+        .whatsapp-card {
+            padding: 40px 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .whatsapp-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--whatsapp), transparent);
+        }
+
+        .whatsapp-icon {
+            font-size: 3rem;
+            color: var(--whatsapp);
+            margin-bottom: 15px;
+            display: block;
+            filter: drop-shadow(0 0 20px rgba(37, 211, 102, 0.5));
+        }
+
+        .whatsapp-card h2 {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .whatsapp-card p {
+            color: var(--text-muted);
+            margin-bottom: 22px;
+            max-width: 520px;
+            margin-left: auto;
+            margin-right: auto;
+            line-height: 1.6;
+        }
+
+        .whatsapp-btn {
+            background: linear-gradient(135deg, #25d366, #128c7e);
+            box-shadow: 0 6px 20px rgba(37, 211, 102, 0.4);
+        }
+
+        .whatsapp-btn:hover:not(:disabled) {
+            box-shadow: 0 10px 28px rgba(37, 211, 102, 0.6);
+        }
+
+        /* ============================================
+           DISCLAIMER
+        ============================================ */
+        .disclaimer {
+            margin-top: 40px;
+            padding: 18px 24px;
+            background: rgba(255, 200, 0, 0.05);
+            border: 1px solid rgba(255, 200, 0, 0.2);
+            border-radius: 12px;
+            color: rgba(255, 255, 255, 0.75);
+            font-size: 0.85rem;
+            line-height: 1.6;
+        }
+
+        .disclaimer i {
+            color: #fbbf24;
+            margin-right: 6px;
+        }
+
+        .disclaimer strong {
+            color: #fbbf24;
+        }
+
+        /* ============================================
+           FOOTER
+        ============================================ */
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            padding: 30px 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .footer-powered {
+            font-family: 'Space Grotesk', sans-serif;
+            font-size: 1rem;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, #60a5fa, #a78bfa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 8px;
+        }
+
+        .footer-subtitle {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            margin-bottom: 12px;
+        }
+
+        .copyright {
+            color: rgba(255, 255, 255, 0.4);
+            font-size: 0.78rem;
+        }
+
+        /* ============================================
+           BACK TO TOP
+        ============================================ */
+        .back-to-top {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+            border: none;
+            color: #fff;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.5);
+            transition: all 0.3s ease;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .back-to-top:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 26px rgba(59, 130, 246, 0.7);
+        }
+
+        /* ============================================
+           TOAST NOTIFICATIONS
+        ============================================ */
+        #toastContainer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            max-width: calc(100vw - 40px);
+        }
+
+        .toast {
+            padding: 14px 22px;
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-weight: 500;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transform: translateX(120%);
+            transition: all 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            max-width: 360px;
+        }
+
+        .toast-show {
+            opacity: 1;
+            transform: translateX(0);
+        }
+
+        .toast-success { background: linear-gradient(135deg, #10b981, #059669); }
+        .toast-error { background: linear-gradient(135deg, #ef4444, #b91c1c); }
+        .toast-info { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+
+        /* ============================================
+           UTILITIES
+        ============================================ */
+        .hidden {
+            display: none !important;
+        }
+
+        /* ============================================
+           RESPONSIVE
+        ============================================ */
+        @media (max-width: 720px) {
+            .result-card {
+                grid-template-columns: 1fr;
+                padding: 20px;
+            }
+
+            .hero-card {
+                padding: 40px 20px;
+            }
+
+            .navbar {
+                padding: 15px 20px;
+            }
+
+            .logo {
+                font-size: 1rem;
+            }
+
+            .btn-3d {
+                width: 100%;
+            }
+
+            .input-3d {
+                width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Animated Background Elements -->
@@ -38,7 +703,7 @@
                 </div>
                 <h1 class="hero-title">FACEBOOK VIDEO DOWNLOADER</h1>
                 <p class="hero-subtitle">Download Your Favorite Facebook Videos Easily & Quickly!</p>
-                
+
                 <div class="input-group">
                     <input type="text" id="videoUrl" class="input-3d" placeholder="Paste Your Facebook Video Link Here...">
                     <button id="downloadBtn" class="btn-3d">
@@ -125,6 +790,350 @@
         <i class="fa-solid fa-arrow-up"></i>
     </button>
 
-    <script src="script.js"></script>
+    <script>
+        // ============================================
+        // CONFIG
+        // ============================================
+        const API_BASE = 'https://infinity-api.sandaliamaya2012.workers.dev';
+
+        // ============================================
+        // DOM ELEMENTS
+        // ============================================
+        const videoUrlInput = document.getElementById('videoUrl');
+        const downloadBtn = document.getElementById('downloadBtn');
+        const resultSection = document.getElementById('resultSection');
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        const videoTitle = document.getElementById('videoTitle');
+        const qualitiesContainer = document.getElementById('qualitiesContainer');
+        const toastContainer = document.getElementById('toastContainer');
+        const backToTopBtn = document.getElementById('backToTop');
+
+        // ============================================
+        // TOAST NOTIFICATIONS
+        // ============================================
+        function showToast(message, type = 'info', duration = 4000) {
+            const icon = type === 'success' ? 'fa-check-circle'
+                       : type === 'error' ? 'fa-exclamation-circle'
+                       : 'fa-info-circle';
+
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `<i class="fa-solid ${icon}"></i> <span>${message}</span>`;
+            toastContainer.appendChild(toast);
+
+            requestAnimationFrame(() => {
+                toast.classList.add('toast-show');
+            });
+
+            setTimeout(() => {
+                toast.classList.remove('toast-show');
+                setTimeout(() => toast.remove(), 350);
+            }, duration);
+        }
+
+        // ============================================
+        // LOADING STATE
+        // ============================================
+        function setLoading(loading) {
+            if (loading) {
+                downloadBtn.disabled = true;
+                downloadBtn.innerHTML = `<span><i class="fa-solid fa-spinner fa-spin"></i> LOADING...</span>`;
+            } else {
+                downloadBtn.disabled = false;
+                downloadBtn.innerHTML = `<span>DOWNLOAD VIDEO</span>`;
+            }
+        }
+
+        // ============================================
+        // HIDE RESULT
+        // ============================================
+        function hideResult() {
+            resultSection.classList.add('hidden');
+        }
+
+        // ============================================
+        // RENDER VIDEO INFO
+        // ============================================
+        function renderVideoInfo({ title, thumbnail, qualities }) {
+            // Thumbnail
+            if (thumbnail) {
+                videoThumbnail.src = thumbnail;
+                videoThumbnail.alt = title || 'Video Thumbnail';
+                videoThumbnail.style.display = 'block';
+            } else {
+                videoThumbnail.src = 'https://via.placeholder.com/480x270/1e293b/94a3b8?text=No+Thumbnail';
+                videoThumbnail.alt = 'No Thumbnail';
+            }
+
+            // Title
+            videoTitle.textContent = title || 'Facebook Video';
+
+            // Qualities
+            qualitiesContainer.innerHTML = '';
+
+            if (qualities && qualities.length > 0) {
+                qualities.forEach(q => {
+                    const btn = document.createElement('button');
+                    btn.className = 'quality-btn';
+                    btn.innerHTML = `<i class="fa-solid fa-download"></i> <span>${q.label}</span>`;
+                    btn.addEventListener('click', () => downloadVideo(q.url, q.label));
+                    qualitiesContainer.appendChild(btn);
+                });
+            } else {
+                qualitiesContainer.innerHTML = '<p class="no-quality">No download links available.</p>';
+            }
+
+            // Show
+            resultSection.classList.remove('hidden');
+            setTimeout(() => {
+                resultSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 100);
+        }
+
+        // ============================================
+        // DOWNLOAD VIDEO (trigger browser download)
+        // ============================================
+        function downloadVideo(url, qualityLabel = 'Video') {
+            if (!url) {
+                showToast('Download URL not found.', 'error');
+                return;
+            }
+
+            const cleanLabel = String(qualityLabel).replace(/[^a-z0-9]+/gi, '_').toLowerCase();
+            const filename = `facebook_video_${cleanLabel}_${Date.now()}.mp4`;
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            a.target = '_blank';
+            a.rel = 'noopener noreferrer';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+
+            showToast(`Downloading ${qualityLabel}...`, 'success');
+        }
+
+        // ============================================
+        // HELPER: Normalize API response
+        // Tries several possible shapes.
+        // ============================================
+        function normalizeResponse(raw) {
+            if (!raw || typeof raw !== 'object') return null;
+
+            // unwrap common wrappers
+            const d = raw.data || raw.result || raw.response || raw;
+
+            const title =
+                d.title || d.videoTitle || d.name || d.description || 'Facebook Video';
+
+            const thumbnail =
+                d.thumbnail || d.thumb || d.cover ||
+                d.image || d.picture || d.preview || '';
+
+            const qualities = [];
+
+            // 1) explicit qualities array
+            const qArr = d.qualities || d.links || d.media || d.formats || d.videos;
+            if (Array.isArray(qArr) && qArr.length > 0) {
+                qArr.forEach((item, i) => {
+                    const url = item.url || item.downloadUrl || item.download_url || item.link || item.src;
+                    const label =
+                        item.label || item.quality || item.resolution ||
+                        item.name || item.format || `Quality ${i + 1}`;
+                    if (url) qualities.push({ label: String(label).toUpperCase(), url });
+                });
+            }
+
+            // 2) hd / sd flat fields
+            const hdUrl = d.hd || d.HD || d.hdUrl || d.hd_url || d.video_hd;
+            const sdUrl = d.sd || d.SD || d.sdUrl || d.sd_url || d.video_sd;
+            if (typeof hdUrl === 'string' && hdUrl.startsWith('http')) {
+                qualities.push({ label: 'HD', url: hdUrl });
+            }
+            if (typeof sdUrl === 'string' && sdUrl.startsWith('http')) {
+                qualities.push({ label: 'SD', url: sdUrl });
+            }
+
+            // 3) single url
+            const singleUrl =
+                d.url || d.downloadUrl || d.download_url ||
+                d.video || d.videoUrl || d.video_url || d.mp4;
+            if (typeof singleUrl === 'string' && singleUrl.startsWith('http')) {
+                // avoid duplicating
+                if (!qualities.some(q => q.url === singleUrl)) {
+                    qualities.push({ label: 'DOWNLOAD', url: singleUrl });
+                }
+            }
+
+            if (!title && !thumbnail && qualities.length === 0) return null;
+
+            return { title, thumbnail, qualities };
+        }
+
+        // ============================================
+        // MAIN HANDLER
+        // ============================================
+        async function handleDownload() {
+            const url = videoUrlInput.value.trim();
+
+            if (!url) {
+                showToast('Please paste a Facebook video link.', 'error');
+                return;
+            }
+
+            if (!/facebook\.com|fb\.watch|fb\.me/i.test(url)) {
+                showToast('Please enter a valid Facebook video link.', 'error');
+                return;
+            }
+
+            hideResult();
+            setLoading(true);
+
+            try {
+                // Try /api/facebook/info first
+                const infoRes = await fetch(`${API_BASE}/api/facebook/info?url=${encodeURIComponent(url)}`);
+
+                let parsed = null;
+                if (infoRes.ok) {
+                    const json = await infoRes.json().catch(() => null);
+                    parsed = normalizeResponse(json);
+                }
+
+                // Fallback: try /api/facebook/download
+                if (!parsed) {
+                    const dlRes = await fetch(`${API_BASE}/api/facebook/download?url=${encodeURIComponent(url)}`);
+                    if (dlRes.ok) {
+                        const json = await dlRes.json().catch(() => null);
+                        parsed = normalizeResponse(json);
+                    }
+                }
+
+                // Fallback: try root ?url=
+                if (!parsed) {
+                    const rootRes = await fetch(`${API_BASE}/?url=${encodeURIComponent(url)}`);
+                    if (rootRes.ok) {
+                        const json = await rootRes.json().catch(() => null);
+                        parsed = normalizeResponse(json);
+                    }
+                }
+
+                if (!parsed) {
+                    throw new Error('Could not extract video data from API.');
+                }
+
+                if (!parsed.qualities || parsed.qualities.length === 0) {
+                    throw new Error('No download links returned by API.');
+                }
+
+                renderVideoInfo(parsed);
+                showToast('Video info loaded successfully!', 'success');
+
+            } catch (err) {
+                console.error('Download error:', err);
+                showToast(err.message || 'Failed to fetch video. Please try again.', 'error');
+            } finally {
+                setLoading(false);
+            }
+        }
+
+        // ============================================
+        // EVENT LISTENERS
+        // ============================================
+        downloadBtn.addEventListener('click', handleDownload);
+        videoUrlInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                handleDownload();
+            }
+        });
+
+        // ============================================
+        // BACK TO TOP
+        // ============================================
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 300) {
+                backToTopBtn.classList.remove('hidden');
+            } else {
+                backToTopBtn.classList.add('hidden');
+            }
+        });
+
+        backToTopBtn.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        // ============================================
+        // SIMPLE PARTICLE BACKGROUND
+        // ============================================
+        (function initParticles() {
+            const canvas = document.getElementById('particleCanvas');
+            const ctx = canvas.getContext('2d');
+            let particles = [];
+            let w, h;
+
+            function resize() {
+                w = canvas.width = window.innerWidth;
+                h = canvas.height = window.innerHeight;
+            }
+
+            function createParticles() {
+                particles = [];
+                const count = Math.min(70, Math.floor(window.innerWidth / 25));
+                for (let i = 0; i < count; i++) {
+                    particles.push({
+                        x: Math.random() * w,
+                        y: Math.random() * h,
+                        vx: (Math.random() - 0.5) * 0.4,
+                        vy: (Math.random() - 0.5) * 0.4,
+                        r: Math.random() * 1.6 + 0.4
+                    });
+                }
+            }
+
+            function animate() {
+                ctx.clearRect(0, 0, w, h);
+                for (const p of particles) {
+                    p.x += p.vx;
+                    p.y += p.vy;
+                    if (p.x < 0 || p.x > w) p.vx *= -1;
+                    if (p.y < 0 || p.y > h) p.vy *= -1;
+
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                    ctx.fillStyle = 'rgba(147, 197, 253, 0.55)';
+                    ctx.fill();
+                }
+
+                // lines
+                for (let i = 0; i < particles.length; i++) {
+                    for (let j = i + 1; j < particles.length; j++) {
+                        const dx = particles[i].x - particles[j].x;
+                        const dy = particles[i].y - particles[j].y;
+                        const dist = Math.hypot(dx, dy);
+                        if (dist < 120) {
+                            ctx.strokeStyle = `rgba(59, 130, 246, ${0.12 * (1 - dist / 120)})`;
+                            ctx.lineWidth = 0.6;
+                            ctx.beginPath();
+                            ctx.moveTo(particles[i].x, particles[i].y);
+                            ctx.lineTo(particles[j].x, particles[j].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+
+                requestAnimationFrame(animate);
+            }
+
+            window.addEventListener('resize', () => {
+                resize();
+                createParticles();
+            });
+
+            resize();
+            createParticles();
+            animate();
+        })();
+    </script>
 </body>
 </html>
